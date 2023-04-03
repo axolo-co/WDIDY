@@ -1,6 +1,8 @@
 # WDIDY
 What Did I do Yesterday is a simple script that will help developers answer the question for themself: what did I do yesterday?
 
+
+
 # Why did we do WDIDY? 
 
 Have you ever forgotten what you did yesterday at the moment you had to share it with your team? No more! WDIDY will help you answer this question in a few seconds.
