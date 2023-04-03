@@ -23,6 +23,10 @@ OPENAIKEY="YOUR_OPENAI_KEY"
 2. ``yarn add axios moment path dotenv``
 3. ``yarn run widdy``
 
+# Contributing
+
+If you want to contribute to this project, simply fork it and submit a pull request. We will review it and merge it if it's good.
+
 # ChatGPT 4 Prompt to come up with a first version of the script
 Lets build simple script in Javascript that will be called WDIDY, this script will help developers answer the question for themself: 
 WDIDY: "What did I do Yesterday"
