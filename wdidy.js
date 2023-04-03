@@ -1,4 +1,6 @@
-require('dotenv').config()
+const path = require('path')
+require('dotenv').config({ path: path.join(__dirname, '.env') })
+
 const axios = require('axios')
 const moment = require('moment')
 
@@ -118,6 +120,7 @@ async function generateBulletPoints(summary) {
 }
 
 async function WDIDY() {
+  console.log('WDIDY:\n')
   const { start, end } = getLastWorkingDay()
   const repos = await fetchRepositories()
 
@@ -139,7 +142,6 @@ async function WDIDY() {
 
   if (summary !== '[]') {
     const bulletPoints = await generateBulletPoints(summary)
-    console.log('WDIDY:\n')
     for (const point of bulletPoints) {
       console.log(`${point}`)
     }
