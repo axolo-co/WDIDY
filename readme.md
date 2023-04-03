@@ -1,3 +1,26 @@
+# WDIDY
+What Did I do Yesterday is a simple script that will help developers answer the question for themself: what did I do yesterday?
+
+# Why did we do WDIDY? 
+
+Have you ever forgotten what you did yesterday at the moment you had to share it with your team? No more! WDIDY will help you answer this question in a few seconds.
+
+## How did we do it?
+
+WDIDY is a fun experiment, it was made entirely using ChatGPT 4.
+
+## How to use it
+
+1. Add a .env file in the cloned repository with: 
+
+GITHUBTOKEN="YOUR_GITHUB_TOKEN" 
+=> Generate a GitHub token here: https://github.com/settings/tokens/new.
+OPENAIKEY="YOUR_OPENAI_KEY" 
+=> Generate an OpenAI key here: https://platform.openai.com/
+
+2. ```yarn add axios moment path dotenv``
+3. ``yarn run widdy``
+
 # ChatGPT 4 Prompt to come up with a first version of the script
 Lets build simple script in Javascript that will be called WDIDY, this script will help developers answer the question for themself: 
 WDIDY: "What did I do Yesterday"
