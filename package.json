@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "wdidy": "node wdidy.js"
+  },
+  "dependencies": {
+    "@octokit/rest": "^19.0.7",
+    "dotenv": "^16.0.3",
+    "moment": "^2.29.4",
+    "openai": "^3.2.1"
+  }
+}

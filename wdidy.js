@@ -1,63 +1,101 @@
-const { Octokit } = require('@octokit/rest')
-const openai = require('openai')
+require('dotenv').config()
+const axios = require('axios')
+const moment = require('moment')
 
-const token = 'your_personal_access_token_here'
-const octokit = new Octokit({ auth: token })
+const GITHUBTOKEN = process.env.GITHUBTOKEN
+const OPENAIKEY = process.env.OPENAIKEY
 
-async function main() {
-  const today = new Date()
-  const yesterday = new Date(today)
-  yesterday.setDate(yesterday.getDate() - 1)
-  const yesterdayStr = yesterday.toISOString().split('T')[0]
+const githubApi = axios.create({
+  baseURL: 'https://api.github.com/',
+  headers: {
+    Authorization: `token ${GITHUBTOKEN}`,
+  },
+})
 
-  const commits = []
-  const repos = await octokit.repos.listForAuthenticatedUser()
-  for (const repo of repos.data) {
-    const repoCommits = await octokit.repos.listCommits({
-      owner: repo.owner.login,
-      repo: repo.name,
-      since: yesterdayStr,
-    })
-    commits.push(...repoCommits.data)
-  }
+async function fetchRepositories() {
+  const { data: repos } = await githubApi.get('user/repos')
+  return repos
+}
 
-  const commitInfo = { repos: {}, count: 0 }
-  for (const commit of commits) {
-    const repoName = commit.repository.name
-    if (!(repoName in commitInfo.repos)) {
-      commitInfo.repos[repoName] = []
+async function fetchCommits(repo, date) {
+  try {
+    const { data: commits } = await githubApi.get(
+      `repos/${repo.owner.login}/${repo.name}/commits`,
+      {
+        params: {
+          since: date.startOf('day').toISOString(),
+          until: date.endOf('day').toISOString(),
+        },
+      },
+    )
+    return commits
+  } catch (error) {
+    if (error.response.status === 409) {
+      console.error(`No commits found for repository: ${repo.name}`)
+      return []
     }
-    commitInfo.repos[repoName].push(commit.commit.message)
-    commitInfo.count += 1
-  }
-
-  openai.apiKey = 'your_api_key_here'
-  const summaryPrompt = `Yesterday, I made ${commitInfo.count} commits to ${
-    Object.keys(commitInfo.repos).length
-  } repositories. Here's a summary:`
-  const summary = await generateBulletPoints(summaryPrompt)
-  console.log(summary)
-
-  for (const repoName in commitInfo.repos) {
-    console.log(`\n${repoName}:`)
-    for (const message of commitInfo.repos[repoName]) {
-      const bulletPointPrompt = `${message} `
-      const bulletPoint = await generateBulletPoints(bulletPointPrompt)
-      console.log(`- ${bulletPoint}`)
-    }
+    throw error
   }
 }
 
-async function generateBulletPoints(prompt) {
-  const completions = await openai.complete({
-    engine: 'text-davinci-002',
-    prompt: prompt,
-    maxTokens: 1024,
-    n: 1,
-    stop: null,
-    temperature: 0.5,
-  })
-  return completions.choices[0].text.trim()
+async function generateBulletPoints(summary) {
+  try {
+    const response = await axios.post(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'user',
+            content: `Turn the following summary into bullet points:\n${summary}`,
+          },
+        ],
+        temperature: 0.7,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${OPENAIKEY}`,
+        },
+      },
+    )
+
+    const output = response.data.choices[0].message.content.trim()
+    const bulletPoints = output.split('\n')
+    return bulletPoints
+  } catch (error) {
+    console.error('Error generating bullet points:', error.message)
+    return []
+  }
 }
 
-main().catch(console.error)
+async function WDIDY() {
+  const yesterday = moment().subtract(3, 'day')
+  const repos = await fetchRepositories()
+
+  let summary = ''
+
+  for (const repo of repos) {
+    const commits = await fetchCommits(repo, yesterday)
+    if (commits.length > 0) {
+      summary += `In repository ${repo.name}, you made ${commits.length} commit(s):\n`
+      for (const commit of commits) {
+        summary += `- ${commit.commit.message}\n`
+      }
+    }
+  }
+
+  if (summary) {
+    const bulletPoints = await generateBulletPoints(summary)
+    console.log('WDIDY:\n')
+    for (const point of bulletPoints) {
+      console.log(`- ${point}`)
+    }
+  } else {
+    console.log("You didn't make any commits yesterday.")
+  }
+}
+
+WDIDY().catch((error) => {
+  console.error('An error occurred:', error.message)
+})
