@@ -1,4 +1,5 @@
 {
+  "license": "MIT",
   "scripts": {
     "wdidy": "node wdidy.js"
   },
@@ -6,7 +7,9 @@
     "@octokit/rest": "^19.0.7",
     "dotenv": "^16.0.3",
     "moment": "^2.29.4",
-    "openai": "^3.2.1",
     "path": "^0.12.7"
+  },
+  "author": {
+    "name": "Sydney Cohen with the help of GPT and copilot"
   }
 }
