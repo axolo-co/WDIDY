@@ -13,12 +13,14 @@ WDIDY is a fun experiment, it was made entirely using ChatGPT 4.
 
 1. Add a .env file in the cloned repository with: 
 
+``
 GITHUBTOKEN="YOUR_GITHUB_TOKEN" 
 => Generate a GitHub token here: https://github.com/settings/tokens/new.
 OPENAIKEY="YOUR_OPENAI_KEY" 
 => Generate an OpenAI key here: https://platform.openai.com/
+``
 
-2. ```yarn add axios moment path dotenv``
+2. ``yarn add axios moment path dotenv``
 3. ``yarn run widdy``
 
 # ChatGPT 4 Prompt to come up with a first version of the script
