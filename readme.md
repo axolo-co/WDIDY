@@ -11,6 +11,10 @@ Have you ever forgotten what you did yesterday at the moment you had to share it
 
 WDIDY is a fun experiment, it was made entirely using ChatGPT 4.
 
+## How does it work? 
+
+WDIDY will look at your 30 most recent updated repositories, fetch the commits you've made that day and prompt ChatGPT 3.5 to resume them in bullet points.
+
 ## How to use it
 
 1. Add a .env file in the cloned repository with: 
