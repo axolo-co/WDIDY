@@ -1,4 +1,4 @@
-# ChatGPT 4 Prompt
+# ChatGPT 4 Prompt to come up with a first version of the script
 Lets build simple script in Javascript that will be called WDIDY, this script will help developers answer the question for themself: 
 WDIDY: "What did I do Yesterday"
 
