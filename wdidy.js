@@ -12,19 +12,67 @@ const githubApi = axios.create({
   },
 })
 
-async function fetchRepositories() {
-  const { data: repos } = await githubApi.get('user/repos')
-  return repos
+function getLastWorkingDay() {
+  const today = moment()
+  let lastWorkingDay
+
+  switch (today.day()) {
+    case 1: // Monday
+      lastWorkingDay = today.clone().subtract(3, 'days')
+      break
+    case 0: // Sunday
+      lastWorkingDay = today.clone().subtract(2, 'days')
+      break
+    case 6: // Saturday
+      lastWorkingDay = today.clone().subtract(1, 'day')
+      break
+    default: // Weekdays (Tuesday - Friday)
+      lastWorkingDay = today.clone().subtract(1, 'day')
+      if (lastWorkingDay.day() === 0) {
+        lastWorkingDay.subtract(2, 'days')
+      } else if (lastWorkingDay.day() === 6) {
+        lastWorkingDay.subtract(1, 'day')
+      }
+      break
+  }
+
+  // Return an object containing the start and end dates
+  return {
+    start: lastWorkingDay.clone().startOf('day'),
+    end: lastWorkingDay.clone().endOf('day'),
+  }
 }
 
-async function fetchCommits(repo, date) {
+async function fetchRepositories() {
+  const activeRepositories = 30
+  const perPage = 100 // Number of repositories to return per page (max 100)
+  const { data: repos } = await githubApi.get(`user/repos?per_page=${perPage}`)
+  // Sort the repositories by updated_at in descending order
+  const sortedRepos = repos.sort(
+    (a, b) => new Date(b.updated_at) - new Date(a.updated_at),
+  )
+  // Return only the first activeRepositories repositories
+  const activeRepos = sortedRepos.slice(0, activeRepositories)
+  // Check if there are more active repositories on the next page
+  if (activeRepos.length < activeRepositories && repos.length === perPage) {
+    // If there are more repositories on the next page, recursively fetch the next page
+    const nextActiveRepos = await fetchRepositories(page + 1)
+    // Concatenate the active repositories from the next page with the current active repositories
+    return activeRepos.concat(
+      nextActiveRepos.slice(0, activeRepositories - activeRepos.length),
+    )
+  }
+  return activeRepos.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+}
+
+async function fetchCommits(repo, startDate, endDate) {
   try {
     const { data: commits } = await githubApi.get(
       `repos/${repo.owner.login}/${repo.name}/commits`,
       {
         params: {
-          since: date.startOf('day').toISOString(),
-          until: date.endOf('day').toISOString(),
+          since: startDate.toISOString(),
+          until: endDate.toISOString(),
         },
       },
     )
@@ -47,7 +95,7 @@ async function generateBulletPoints(summary) {
         messages: [
           {
             role: 'user',
-            content: `Turn the following summary into bullet points:\n${summary}`,
+            content: `Help me prepare my standup of thing I did, I need to know in a few bullets points what I was up to recently and on which repository from this list of commits from Github.\n\n${summary}`,
           },
         ],
         temperature: 0.7,
@@ -70,26 +118,30 @@ async function generateBulletPoints(summary) {
 }
 
 async function WDIDY() {
-  const yesterday = moment().subtract(3, 'day')
+  const { start, end } = getLastWorkingDay()
   const repos = await fetchRepositories()
 
-  let summary = ''
+  let summaryData = []
 
   for (const repo of repos) {
-    const commits = await fetchCommits(repo, yesterday)
+    const commits = await fetchCommits(repo, start, end)
     if (commits.length > 0) {
-      summary += `In repository ${repo.name}, you made ${commits.length} commit(s):\n`
-      for (const commit of commits) {
-        summary += `- ${commit.commit.message}\n`
-      }
+      const commitMessages = commits.map((commit) => commit.commit.message)
+      summaryData.push({
+        repository: repo.name,
+        commitCount: commits.length,
+        commitMessages: commitMessages,
+      })
     }
   }
 
-  if (summary) {
+  const summary = JSON.stringify(summaryData, null, 2)
+
+  if (summary !== '[]') {
     const bulletPoints = await generateBulletPoints(summary)
     console.log('WDIDY:\n')
     for (const point of bulletPoints) {
-      console.log(`- ${point}`)
+      console.log(`${point}`)
     }
   } else {
     console.log("You didn't make any commits yesterday.")
