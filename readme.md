@@ -1,5 +1,5 @@
 # WDIDY
-What Did I do Yesterday is a simple script that will help developers answer the question for themself: what did I do yesterday?
+Introducing WDIDY (What Did I Do Yesterday) - a simple and convenient script that helps developers prepare for standups by quickly summarizing their previous day's tasks. With WDIDY, developers can easily track their daily progress and have a ready-made answer to the all-important standup question. Say goodbye to the stress of remembering everything you did yesterday and hello to a more organized and stress-free team update with WDIDY.
 
 ![Wdidy screenshot](https://raw.githubusercontent.com/axolo-co/WDIDY/main/images/wdidyscreenshot.jpg)
 
@@ -35,7 +35,7 @@ If you want to contribute to this project, simply fork it and submit a pull requ
 
 # ChatGPT 4 Prompt to come up with a first version of the script
 ```
-Create a program called "WDIDY" that automatically generates bullet points of recent work done on GitHub repositories, using the GitHub API and OpenAI's GPT-3 language model. The program should follow the steps below:
+Create a program called "WDIDY" that automatically generates bullet points of recent work done on GitHub repositories, using the GitHub API and OpenAI's GPT-3.5 language model. The program should follow the steps below:
 
 1. Import the required libraries: axios, moment, and dotenv.
 2. Load environment variables from a .env file using dotenv and store them in variables named GITHUBTOKEN and OPENAIKEY.
