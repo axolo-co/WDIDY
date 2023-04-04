@@ -17,17 +17,12 @@ WDIDY will look at your 30 most recent updated repositories, fetch the commits y
 
 ## How to use it
 
-1. Add a .env file in the cloned repository with: 
+1. ``npm install axios dotenv moment readline``
+2. ``npm run widdy``
 
-```
-GITHUBTOKEN="YOUR_GITHUB_TOKEN" 
+You will be prompted to add your GitHub token and OpenAI API key. You can get them here:
 => Generate a GitHub token here: https://github.com/settings/tokens/new.
-OPENAIKEY="YOUR_OPENAI_KEY" 
 => Generate an OpenAI key here: https://platform.openai.com/
-```
-
-2. ``yarn add axios moment path dotenv``
-3. ``yarn run widdy``
 
 # Contributing
 
