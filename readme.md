@@ -5,7 +5,7 @@ Assuming developers write informative commits, WDIDY (What Did I Do Yesterday) s
 
 # Why did we do WDIDY? 
 
-Have you ever forgotten what you did yesterday at the moment you had to share it with your team? No more! WDIDY will help you answer this question in a few seconds.
+Have you ever forgotten what you did yesterday at the moment you had to share it with your team? No more! WDIDY will help you answer this question in a few seconds by looking at the commit messages you made on your last working day.
 
 ## How did we do it?
 
