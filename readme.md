@@ -21,7 +21,9 @@ WDIDY will look at your 30 most recent updated repositories, fetch the commits y
 2. ``npm run widdy``
 
 You will be prompted to add your GitHub token and OpenAI API key. You can get them here:
+
 => Generate a GitHub token here: https://github.com/settings/tokens/new.
+
 => Generate an OpenAI key here: https://platform.openai.com/
 
 # Contributing
