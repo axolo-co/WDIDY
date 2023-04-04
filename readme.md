@@ -1,7 +1,7 @@
 # WDIDY
 What Did I do Yesterday is a simple script that will help developers answer the question for themself: what did I do yesterday?
 
-![Wdidy in action](https://raw.githubusercontent.com/axolo-co/WDIDY/main/images/wdidy%20in%20action.gif)
+![Wdidy screenshot](https://raw.githubusercontent.com/axolo-co/WDIDY/main/images/wdidyscreenshot.jpg)
 
 # Why did we do WDIDY? 
 
