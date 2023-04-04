@@ -110,7 +110,7 @@ async function generateBulletPoints(summary) {
         messages: [
           {
             role: 'user',
-            content: `Help me prepare my standup of thing I did, I need to know in a few bullets points what I was up to recently and on which repository from this list of commits from Github.\n\n${summary}`,
+            content: `Help me prepare my standup of thing I did, I need to know in a 3 to 6 bullets points what I was up to recently from this list of commits from Github.\n\n${summary}`,
           },
         ],
         temperature: 0.7,
@@ -182,9 +182,8 @@ async function WDIDY() {
   const user = await getUser()
   const repos = await fetchRepositories()
 
-  let summaryData = []
-
   for (const repo of repos) {
+    let summaryData = []
     const commits = await fetchCommits(repo, start, end, user)
     if (commits.length > 0) {
       const commitMessages = commits.map((commit) => commit.commit.message)
@@ -193,19 +192,18 @@ async function WDIDY() {
         commitCount: commits.length,
         commitMessages: commitMessages,
       })
+      const summary = JSON.stringify(summaryData, null, 2)
+      if (summary !== '[]') {
+        console.log(`\nOn ${repo.name} repository:`)
+        const bulletPoints = await generateBulletPoints(summary)
+        for (const point of bulletPoints) {
+          console.log(`${point}`)
+        }
+      }
     }
   }
-
-  const summary = JSON.stringify(summaryData, null, 2)
-
-  if (summary !== '[]') {
-    const bulletPoints = await generateBulletPoints(summary)
-    for (const point of bulletPoints) {
-      console.log(`${point}`)
-    }
-  } else {
-    console.log("You didn't make any commits yesterday.")
-  }
+  console.log('\n_____ End of the report _____\n')
+  return
 }
 
 WDIDY().catch((error) => {
