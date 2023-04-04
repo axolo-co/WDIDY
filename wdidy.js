@@ -110,7 +110,7 @@ async function generateBulletPoints(summary) {
         messages: [
           {
             role: 'user',
-            content: `Help me prepare my standup of thing I did, I need to know in a 3 to 6 bullets points what I was up to recently from this list of commits from Github.\n\n${summary}`,
+            content: `Create a numbered list of 3 to 6 key accomplishments from my recent GitHub commits for a concise stand-up summary. Use the provided commit summary as reference:\n\n${summary}`,
           },
         ],
         temperature: 0.7,
