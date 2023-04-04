@@ -1,5 +1,5 @@
 # WDIDY
-Introducing WDIDY (What Did I Do Yesterday) - a simple and convenient script that helps developers prepare for standups by quickly summarizing their previous day's tasks. With WDIDY, developers can easily track their daily progress and have a ready-made answer to the all-important standup question. Say goodbye to the stress of remembering everything you did yesterday and hello to a more organized and stress-free team update with WDIDY.
+Assuming developers write informative commits ;) ;), WDIDY (What Did I Do Yesterday) streamlines standups by helping them quickly summarize their previous working day's tasks. With WDIDY, developers can easily track their daily progress and have a ready-made answer to the standup question.
 
 ![Wdidy screenshot](https://raw.githubusercontent.com/axolo-co/WDIDY/main/images/wdidyscreenshot.jpg)
 
