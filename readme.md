@@ -1,5 +1,5 @@
 # WDIDY
-Assuming developers write informative commits ;) ;), WDIDY (What Did I Do Yesterday) streamlines standups by helping them quickly summarize their previous working day's tasks. With WDIDY, developers can easily track their daily progress and have a ready-made answer to the standup question.
+Assuming developers write informative commits, WDIDY (What Did I Do Yesterday) streamlines standups by helping them quickly summarize their previous working day's tasks. With WDIDY, developers can easily track their daily progress and have a ready-made answer to the standup question.
 
 ![Wdidy screenshot](https://raw.githubusercontent.com/axolo-co/WDIDY/main/images/wdidyscreenshot.jpg)
 
