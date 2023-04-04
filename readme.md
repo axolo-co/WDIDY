@@ -28,7 +28,7 @@ You will be prompted to add your GitHub token and OpenAI API key. You can get th
 
 # Contributing
 
-If you want to contribute to this project, simply fork it and submit a pull request. We will review it and merge it if we find it useful for the project. Create an issue if you have any improvement ideas before working on a pull requests.
+If you have suggestions for improvements, first open an issue to discuss them. To get involved in this project, fork it and submit a pull request. We will evaluate its relevance to the project and, if helpful, merge it.
 
 # ChatGPT 4 Prompt to come up with a first version of the script
 ```
