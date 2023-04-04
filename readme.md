@@ -19,19 +19,19 @@ WDIDY will look at your 30 most recent updated repositories, fetch the commits y
 
 1. Add a .env file in the cloned repository with: 
 
-``
+```
 GITHUBTOKEN="YOUR_GITHUB_TOKEN" 
 => Generate a GitHub token here: https://github.com/settings/tokens/new.
 OPENAIKEY="YOUR_OPENAI_KEY" 
 => Generate an OpenAI key here: https://platform.openai.com/
-``
+```
 
 2. ``yarn add axios moment path dotenv``
 3. ``yarn run widdy``
 
 # Contributing
 
-If you want to contribute to this project, simply fork it and submit a pull request. We will review it and merge it if it's good.
+If you want to contribute to this project, simply fork it and submit a pull request. We will review it and merge it if we find it useful for the project. Create an issue if you have any improvement ideas before working on a pull requests.
 
 # ChatGPT 4 Prompt to come up with a first version of the script
 Lets build simple script in Javascript that will be called WDIDY, this script will help developers answer the question for themself: 
