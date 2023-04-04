@@ -1,18 +1,18 @@
 const path = require('path')
-require('dotenv').config({ path: path.join(__dirname, '.env') })
-
+const fs = require('fs')
+const dotenv = require('dotenv')
 const axios = require('axios')
 const moment = require('moment')
+require('dotenv').config({ path: path.join(__dirname, '.env') })
 
-const GITHUBTOKEN = process.env.GITHUBTOKEN
-const OPENAIKEY = process.env.OPENAIKEY
-
-const githubApi = axios.create({
-  baseURL: 'https://api.github.com/',
-  headers: {
-    Authorization: `token ${GITHUBTOKEN}`,
-  },
-})
+function createGitHubApi() {
+  return axios.create({
+    baseURL: 'https://api.github.com/',
+    headers: {
+      Authorization: `token ${process.env.GITHUBTOKEN}`,
+    },
+  })
+}
 
 function getLastWorkingDay() {
   const today = moment()
@@ -48,6 +48,7 @@ function getLastWorkingDay() {
 async function fetchRepositories() {
   const activeRepositories = 30
   const perPage = 100 // Number of repositories to return per page (max 100)
+  const githubApi = createGitHubApi()
   const { data: repos } = await githubApi.get(`user/repos?per_page=${perPage}`)
   // Sort the repositories by updated_at in descending order
   const sortedRepos = repos.sort(
@@ -69,6 +70,7 @@ async function fetchRepositories() {
 
 async function fetchCommits(repo, startDate, endDate) {
   try {
+    const githubApi = createGitHubApi()
     const { data: commits } = await githubApi.get(
       `repos/${repo.owner.login}/${repo.name}/commits`,
       {
@@ -105,7 +107,7 @@ async function generateBulletPoints(summary) {
       {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${OPENAIKEY}`,
+          Authorization: `Bearer ${process.env.OPENAIKEY}`,
         },
       },
     )
@@ -119,9 +121,53 @@ async function generateBulletPoints(summary) {
   }
 }
 
+function getLineFromUser() {
+  return new Promise((resolve, reject) => {
+    const rl = require('readline').createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    })
+    rl.on('line', (input) => {
+      rl.close()
+      resolve(input)
+    })
+  })
+}
+
+function saveEnvFile() {
+  const envPath = path.join(__dirname, '.env')
+  const envConfig = dotenv.parse(fs.readFileSync(envPath))
+  Object.assign(envConfig, {
+    GITHUBTOKEN: process.env.GITHUBTOKEN,
+    OPENAIKEY: process.env.OPENAIKEY,
+  })
+  fs.writeFileSync(envPath, stringifyEnv(envConfig))
+}
+
+function stringifyEnv(envConfig) {
+  let str = ''
+  for (const key in envConfig) {
+    str += `${key}=${envConfig[key]}\n`
+  }
+  return str
+}
+
 async function WDIDY() {
-  console.log('WDIDY:\n')
+  console.log('\n_____ What Did I Do Yesterday: _____\n')
+  if (!process.env.GITHUBTOKEN) {
+    console.log('Please provide your GitHub token:')
+    console.log('=> Generate a GitHub token here: https://github.com/settings/tokens/new')
+    process.env.GITHUBTOKEN = await getLineFromUser()
+    saveEnvFile()
+  }
+  if (!process.env.OPENAIKEY) {
+    console.log('Please provide your OpenAI API key:')
+    console.log('=> Generate an OpenAI key here: https://platform.openai.com/')
+    process.env.OPENAIKEY = await getLineFromUser()
+    saveEnvFile()
+  }
   const { start, end } = getLastWorkingDay()
+  console.log(`\nThe last working day was on ${start.format('dddd, MMMM Do YYYY')}:\n`)
   const repos = await fetchRepositories()
 
   let summaryData = []
