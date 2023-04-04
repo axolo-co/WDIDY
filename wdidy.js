@@ -68,7 +68,17 @@ async function fetchRepositories() {
   return activeRepos.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
 }
 
-async function fetchCommits(repo, startDate, endDate) {
+async function getUser() {
+  try {
+    const githubApi = createGitHubApi()
+    const { data: user } = await githubApi.get(`user`)
+    return user
+  } catch (error) {
+    console.error(`No user found for this token`)
+  }
+}
+
+async function fetchCommits(repo, startDate, endDate, user) {
   try {
     const githubApi = createGitHubApi()
     const { data: commits } = await githubApi.get(
@@ -80,7 +90,8 @@ async function fetchCommits(repo, startDate, endDate) {
         },
       },
     )
-    return commits
+    const userCommits = commits.filter((commit) => commit?.author?.login === user?.login)
+    return userCommits
   } catch (error) {
     if (error.response.status === 409) {
       console.error(`No commits found for repository: ${repo.name}`)
@@ -168,12 +179,13 @@ async function WDIDY() {
   }
   const { start, end } = getLastWorkingDay()
   console.log(`\nThe last working day was on ${start.format('dddd, MMMM Do YYYY')}:\n`)
+  const user = await getUser()
   const repos = await fetchRepositories()
 
   let summaryData = []
 
   for (const repo of repos) {
-    const commits = await fetchCommits(repo, start, end)
+    const commits = await fetchCommits(repo, start, end, user)
     if (commits.length > 0) {
       const commitMessages = commits.map((commit) => commit.commit.message)
       summaryData.push({
