@@ -34,31 +34,18 @@ OPENAIKEY="YOUR_OPENAI_KEY"
 If you want to contribute to this project, simply fork it and submit a pull request. We will review it and merge it if we find it useful for the project. Create an issue if you have any improvement ideas before working on a pull requests.
 
 # ChatGPT 4 Prompt to come up with a first version of the script
-Lets build simple script in Javascript that will be called WDIDY, this script will help developers answer the question for themself: 
-WDIDY: "What did I do Yesterday"
+```
+Create a program called "WDIDY" that automatically generates bullet points of recent work done on GitHub repositories, using the GitHub API and OpenAI's GPT-3 language model. The program should follow the steps below:
 
-With a github token for Auth, the script will look at all the repositories and commits they made yesterday. 
-It will put everything in an object and then it will ask chat gpt to resume this in a bullet points manner. The prompt for generating bullet point should be something like "prompt: `Turn the following summary into bullet points separated by repository:\n\n${summary}`"
+1. Import the required libraries: axios, moment, and dotenv.
+2. Load environment variables from a .env file using dotenv and store them in variables named GITHUBTOKEN and OPENAIKEY.
+3. Define a function called getLastWorkingDay that returns an object containing the start and end dates of the last working day.
+4. Define a function called fetchRepositories that fetches the user's repositories from GitHub API and returns the first 30 active repositories sorted by last updated date.
+5. Define a function called fetchCommits that fetches the commits for a given repository and date range from GitHub API and returns them as an array.
+6. Define a function called generateBulletPoints that uses OpenAI's GPT-3 language model to generate bullet points summarizing recent work done on GitHub repositories.
+7. Define a function called WDIDY that orchestrates the above functions to fetch recent commits from the user's GitHub repositories and generate bullet points summarizing the work done on the last working day.
+8. Call the WDIDY function and handle any errors that occur.
 
-Can you help building this? 
+Note: The program assumes that the user has a valid GitHub token and OpenAI API key stored in environment variables named GITHUBTOKEN and OPENAIKEY, respectively.
 
-More info: 
-Use dotdotenv to import those two variables:
-const GITHUBTOKEN = process.env.GITHUBTOKEN
-const OPENAIKEY = process.env.OPENAIKEY
-Use GPT 3 open ai to resume the bullet points
-You should handle if a git repository as no commits and returns a 409 error
-
-Here is some documentation on gpt 3.5, please adjust your answer to make it work with this: 
-async function generateBulletPoints(summary) {
-  const response = await openai.Completion.create({
-    engine: 'davinci-codex',
-    prompt: `Turn the following summary into bullet points:\n${summary}`,
-    max_tokens: 100,
-    n: 1,
-    stop: null,
-    temperature: 0.5,
-  })
-
-  return response.choices[0].text.trim().split('\n')
-}
+```
