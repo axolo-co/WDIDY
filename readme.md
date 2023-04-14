@@ -18,7 +18,7 @@ WDIDY will look at your 30 most recent updated repositories, fetch the commits y
 ## How to use it
 
 1. ``npm install axios dotenv moment readline``
-2. ``npm run widdy``
+2. ``npm run wdidy``
 
 You will be prompted to add your GitHub token and OpenAI API key. You can get them here:
 
